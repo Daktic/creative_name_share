@@ -1,7 +1,11 @@
+import {useEffect, useState} from "react";
 
 
 const ValueReturned = (props) => {
-
+    const {formValues, JavascriptString} = props;
+    useEffect(() => {
+        console.log(JavascriptString)
+    },[formValues, JavascriptString])
     return (
         <div>
             <h3>Ad Name</h3>
@@ -10,7 +14,7 @@ const ValueReturned = (props) => {
             <h3>Tracking Code</h3>
             <p>creative value: <span>Creative</span></p>
 
-            <p>{props.JavascriptString}</p>
+            <p>{JavascriptString}</p>
 
         </div>
     )

@@ -8,34 +8,39 @@ import AddIcon from '@mui/icons-material/Add';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 
+import debounce from 'lodash.debounce';
+
+const FormPiece = ({onSubmit, onAdd, onDelete, disabled, id}) => {
+
+    const [modifier, setModifier] = useState('')
+    const [formValue, setFormValue] = useState('')
 
 
-const FormPiece = (props) => {
-    const { onAdd, onDelete, onComplete } = props;
-    const [modifier, setModifier] = React.useState('');
-    const [formValue, setFormValue] = React.useState('');
+    const handleModifierChange = (e) => {
+        setModifier(e.target.value);
+    }
+    const handleValueChange = (e) => {
+        setFormValue(e.target.value);
+    }
 
-
-    const handleDropChange = (event) => {
-        setModifier(event.target.value);
-
-    };
-
-    const handleClickChange = (event) => {
-        setFormValue(event.target.value);
-    };
 
     const handleClick = () => {
         onAdd()
     }
     const handleDelete = () => {
-        onDelete(props.id)
+        onDelete(id)
     }
 
-    useEffect(() => {
-        onComplete({modifier:modifier.toLowerCase(), formValue:formValue.toLowerCase()});
-    },[modifier,formValue])
+    useEffect (() => {
 
+        const id = setTimeout(() => {
+            onSubmit({
+                modifier: modifier.toLowerCase(), formValue: formValue.toLowerCase()
+            });
+        },1000)
+
+        return () => clearTimeout(id) // Cleans up the setTimeout
+    }, [modifier,formValue]);
 
 
     return (
@@ -49,26 +54,26 @@ const FormPiece = (props) => {
                 noValidate
                 autoComplete="off"
             >
-                <FormControl disabled={props.disabled} >
+                <FormControl disabled={disabled} >
                     <InputLabel id="demo-simple-select-label">Modifier</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={modifier}
                         label="modifier"
-                        onChange={handleDropChange}
+                        onChange={handleModifierChange}
                     >
-                        <MenuItem value={'And'}>And</MenuItem>
-                        <MenuItem value={'Or'}>Or</MenuItem>
-                        <MenuItem value={'Not'}>And Not</MenuItem>
+                        <MenuItem value={' && '}>And</MenuItem>
+                        <MenuItem value={' || '}>Or</MenuItem>
+                        <MenuItem value={' && !'}>And Not</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField id="filled-basic" label="Value" variant="filled"
                            value={formValue}
-                           onChange={handleClickChange} />
+                           onChange={handleValueChange} />
                 <IconButton aria-label="delete"
                             sx={{ maxWidth:30, maxHeight:30 }}
-                            disabled={props.disabled}
+                            disabled={disabled}
                             onClick={handleDelete}
                             >
                     <DeleteIcon  />
