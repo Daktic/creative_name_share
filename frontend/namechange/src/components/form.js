@@ -1,90 +1,95 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Box, TextField, Card, IconButton,
-    FormControl, InputLabel, MenuItem
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {Box, Button, ButtonGroup, Paper, TextField} from '@mui/material';
 
+const FormPiece = () => {
+    let boxHeight = 100;
+    const [forms, setForms] = useState([
+        <TextField id="1" label="Value" variant="outlined"
+                   sx={{
+                       alignSelf: 'center',
+                       mx: 'auto',
+                       my: 'auto'
+                   }}/>
+    ])
+    const [cards, setCards] = useState(forms)
 
-import debounce from 'lodash.debounce';
-
-const FormPiece = ({onSubmit, onAdd, onDelete, disabled, id}) => {
-
-    const [modifier, setModifier] = useState('')
-    const [formValue, setFormValue] = useState('')
-
-
-    const handleModifierChange = (e) => {
-        setModifier(e.target.value);
+    const handleClick = ({target}) => {
+        if (target.name === 'Or') {
+            setCards(prev => [
+                ...prev,
+                <TextField id={(forms.length + 1).toString()} label="Value" variant="outlined"
+                           sx={{
+                               alignSelf: 'center',
+                               mx: 'auto',
+                               my: 'auto'
+                           }}/>
+            ])
+        } else {
+            boxHeight += 100;
+            setForms(prev => [
+                ...prev,
+                <TextField id={(forms.length + 1).toString()} label="Value" variant="outlined"
+                           sx={{
+                               alignSelf: 'center',
+                               mx: 'auto',
+                               my: 'auto'
+                           }}/>
+            ])
+        }
     }
-    const handleValueChange = (e) => {
-        setFormValue(e.target.value);
-    }
 
 
-    const handleClick = () => {
-        onAdd()
-    }
-    const handleDelete = () => {
-        onDelete(id)
-    }
 
-    useEffect (() => {
+    const FormBox = (
+        <Box
+            sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignSelf: 'center',
+                '& > :not(style)': {
+                    m: 1,
+                    width: '100%',
+                    height: {boxHeight},
+                },
+            }}
+        >
+            <Paper elevation={3}>
+                {forms.map((form, index) => (
+                    <div key={index} >
+                        {form}
+                    </div>
+                ))}
+            </Paper>
+        </Box>
+    )
 
-        const id = setTimeout(() => {
-            onSubmit({
-                modifier: modifier.toLowerCase(), formValue: formValue.toLowerCase()
-            });
-        },1000)
-
-        return () => clearTimeout(id) // Cleans up the setTimeout
-    }, [modifier,formValue]);
+    useEffect(() => {
+        setCards([FormBox])
+    },[forms])
 
 
     return (
-        <Card sx={{ minWidth: 275 }}>
-
-            <Box
-                component="form"
-                sx={{
-                    '& > :not(style)': { m: 1, width: '25ch' },
-                }}
-                noValidate
-                autoComplete="off"
-            >
-                <FormControl disabled={disabled} >
-                    <InputLabel id="demo-simple-select-label">Modifier</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={modifier}
-                        label="modifier"
-                        onChange={handleModifierChange}
-                    >
-                        <MenuItem value={' && '}>And</MenuItem>
-                        <MenuItem value={' || '}>Or</MenuItem>
-                        <MenuItem value={' && !'}>And Not</MenuItem>
-                    </Select>
-                </FormControl>
-                <TextField id="filled-basic" label="Value" variant="filled"
-                           value={formValue}
-                           onChange={handleValueChange} />
-                <IconButton aria-label="delete"
-                            sx={{ maxWidth:30, maxHeight:30 }}
-                            disabled={disabled}
-                            onClick={handleDelete}
-                            >
-                    <DeleteIcon  />
-                </IconButton>
-            </Box>
-            <IconButton aria-label="add"
-                        sx={{ m: 0, p: 0, minWidth:0 }}
-                        onClick={handleClick}>
-                <AddIcon />
-            </IconButton>
-        </Card>
+            <div>
+                {cards.map((card, index) => (
+                    <div key={index} >
+                        {card}
+                    </div>
+                ))}
+            <ButtonGroup variant="contained" aria-label="outlined primary button group" >
+                <Button
+                    name={"And"}
+                    value={"&&"}
+                    onClick={handleClick} >And</Button>
+                <Button
+                    name={"Or"}
+                    value={"||"}
+                    onClick={handleClick} >Or</Button>
+                <Button
+                    name={"And Not"}
+                    value={"&& !"}
+                    onClick={handleClick} >And Not</Button>
+            </ButtonGroup>
+        </div>
 
     )
 }
