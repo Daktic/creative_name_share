@@ -17,12 +17,7 @@ const FormPiece = () => {
         if (target.name === 'Or') {
             setCards(prev => [
                 ...prev,
-                <TextField id={(forms.length + 1).toString()} label="Value" variant="outlined"
-                           sx={{
-                               alignSelf: 'center',
-                               mx: 'auto',
-                               my: 'auto'
-                           }}/>
+                FormBox
             ])
         } else {
             boxHeight += 100;
@@ -38,7 +33,9 @@ const FormPiece = () => {
         }
     }
 
-
+// I bet if I make this a child, i can pass props down to only show
+    // 1 array of Forms in the box at a time
+    // On the parent component I could increment.
 
     const FormBox = (
         <Box
