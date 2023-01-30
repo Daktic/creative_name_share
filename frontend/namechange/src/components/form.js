@@ -1,15 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Button, ButtonGroup, Paper, TextField} from '@mui/material';
+import FormValue from "./FormValue";
 
 const FormPiece = () => {
     let boxHeight = 100;
     const [forms, setForms] = useState([
-        <TextField id="1" label="Value" variant="outlined"
-                   sx={{
-                       alignSelf: 'center',
-                       mx: 'auto',
-                       my: 'auto'
-                   }}/>
+        <FormValue />
     ])
     const [cards, setCards] = useState(forms)
 
