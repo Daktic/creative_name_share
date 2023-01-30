@@ -1,20 +1,21 @@
-import {TextField} from "@mui/material";
-import {useState} from "react";
+import {TextField, Typography} from "@mui/material";
+import {useEffect, useState} from "react";
 
 
-const FormValue = () => {
-    const [formValue, setFormValue] = useState('')
-    const handleChange = ({target}) => {
-        setFormValue(target.value);
-    }
+const FormValue = ({formType, formId, handleChange}) => {
+
+
+
     return (
         <div>
+            <Typography>{formType[formId]}</Typography>
             <TextField id="1" label="Value" variant="outlined" onChange={handleChange}
                        sx={{
                            alignSelf: 'center',
                            mx: 'auto',
                            my: 'auto'
                        }}/>
+
         </div>
     )
 }
